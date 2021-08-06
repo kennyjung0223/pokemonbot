@@ -160,12 +160,7 @@ def what_drops_from(monster):
 		if monster.title() == key.title():
 			return (key, value)
 
-	return []
-
-	# if monster.title() not in monsters:
-	# 	return []
-
-	# return monsters[monster.title()]
+	return (monster, [])
 
 '''
 PUBLIC
@@ -177,12 +172,7 @@ def who_drops(item):
 		if item.title() == key.title():
 			return (key, value)
 
-	return []
-
-	# if item.title() not in items:
-	# 	return []
-
-	# return items[item.title()]
+	return (item, [])
 
 '''
 PUBLIC
@@ -202,6 +192,11 @@ def simulate_soul_scroll(amount, stat):
 
 	return (gain, max_gain, avg_gain)
 
+'''
+PUBLIC
+params: stat - a string which contains either a number of characters
+returns: bool - True if stat is a string, otherwise False
+'''
 def is_number(stat):
 	try:
 		stat = int(stat)
@@ -243,6 +238,7 @@ def get_help_messages(command):
 		**whatdropsfrom** or **wdf:** Provides which items are dropped by the specific monster
 		**whodrops** or **wd:** Provides which monster(s) drop the specific item
 		**soulscroll** or **ss:** Simulates using a soul scroll with the given amount and stat
+		**mention** or **m:** Mentions all the mentioned users in a replied post
 		**bbb:** Fetches a link to the bbb.hidden-street.net database with your searched results
 		**love:** Writes a love message to the inputted name
 		**scold:** Writes a scold message to the inputted name
@@ -356,6 +352,17 @@ def get_help_messages(command):
 		The command will display a simulation of using a soul scroll with the respective stats.
 		"""
 
+	elif command == "mention" or command == "m":
+		return """
+		Information about **mention** or **m** command:
+
+		**Syntax:** `!mention` or `!m`
+
+		Note: You must reply to the post with mentioned people.
+
+		The command will mention everyone who was mentioned in the replied post.
+		"""
+
 	elif command == "bbb":
 		return """
 		Information about **bbb** command:
@@ -423,6 +430,7 @@ def get_help_messages(command):
 	- **whatdropsfrom** or **wdf**
 	- **whodrops** or **wd**
 	- **soulscroll** or **ss**
+	- **mention** or **m**
 	- **bbb**
 	- **love**
 	- **scold**

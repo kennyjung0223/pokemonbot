@@ -18,7 +18,6 @@ import textwrap
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-BOT_CREATOR = "@gamja#9941"
 
 bot = commands.Bot(help_command=None, command_prefix='!')
 
@@ -416,6 +415,17 @@ async def simulate_ss(ctx, *args):
 
 	except ValueError:
 		await ctx.channel.send("Please follow the syntax for this command: ```!soulscroll <amount> <stat>```")
+
+@bot.command(aliases=["mention", "m"])
+async def mention_people(ctx):
+	message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+
+	mentioned_people = []
+
+	for mention in message.mentions:
+		mentioned_people.append("<@{}>".format(mention.id))
+
+	await ctx.channel.send(" ".join(mentioned_people))
 
 @bot.command(name="bbb")
 async def bbb_search(ctx, *args):
