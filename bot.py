@@ -11,7 +11,7 @@ from discord.ext import commands, tasks
 from discord.channel import DMChannel
 
 from dotenv import load_dotenv
-from parser import refresh_rankings_info, get_all_char_info, get_roster, get_links, get_guild_members, get_rising_level, get_rising_quest, what_drops_from, who_drops, simulate_soul_scroll, job_count_msg, get_help_messages
+from parser import refresh_rankings_info, get_all_char_info, get_roster, get_links, get_guild_members, get_rising_level, get_rising_quest, what_drops_from, who_drops, simulate_soul_scroll, is_number, job_count_msg, get_help_messages
 
 import random
 import textwrap
@@ -373,6 +373,8 @@ async def simulate_ss(ctx, *args):
 
 		if amount <= 0:
 			await ctx.channel.send("The amount of the stat must be greater than 0.")
+		elif is_number(stat):
+			await ctx.channel.send("Please follow the syntax for this command: ```!soulscroll <amount> <stat>```")
 		else:
 			gain, max_gain, avg_gain = simulate_soul_scroll(amount, stat)
 

@@ -202,6 +202,13 @@ def simulate_soul_scroll(amount, stat):
 
 	return (gain, max_gain, avg_gain)
 
+def is_number(stat):
+	try:
+		stat = int(stat)
+		return True
+	except ValueError:
+		return False
+
 '''
 PUBLIC
 params: jobs - a dictionary where the key is a job and the value is the count
