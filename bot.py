@@ -1,8 +1,3 @@
-'''
-issues:
-	- 1. handle cases when argument is not even provided at all (see guild command)
-'''
-
 import os
 
 import discord
@@ -167,9 +162,30 @@ async def get_party(ctx, *igns):
 			await ctx.channel.send(embed=embed)
 
 @bot.command(aliases=["rank", "r"])
-async def get_rank(ctx, ign):
-	if len(ign) < 4:
-		await ctx.channel.send(">>> Invalid IGN. IGNs should have at least 4 characters.")
+async def get_rank(ctx, ign=None):
+	if not ign:
+		await ctx.channel.send("Please follow the syntax for this command: `!rank <in_game_name>` or `!r <in_game_name>`")
+	elif len(ign) < 4:
+		embed = discord.Embed(
+			title="Parties",
+			url="https://storymaple.com/rankings-overall",
+			color=discord.Color.red()
+		)
+
+		embed.set_author(
+			name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+			url=ctx.message.jump_url,
+			icon_url=ctx.author.avatar_url
+		)
+
+		embed.add_field(
+			name="No Player Inputs",
+			value="Invalid IGN. IGNs should have at least 4 characters."
+		)
+
+		embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+
+		await ctx.channel.send(embed=embed)
 	else:
 		try:
 			char_infos = get_all_char_info(ign)
@@ -330,160 +346,178 @@ async def get_rising_quest_stars(ctx):
 
 @bot.command(aliases=["whatdropsfrom", "wdf"])
 async def get_what_drops_from(ctx, *monster):
-	monster = ' '.join(monster)
-
-	monster, drops = what_drops_from(monster)
-
-	if not drops:
-		await ctx.channel.send("**{}** does not exist in the game.".format(monster))
+	if not monster:
+		await ctx.channel.send("Please follow the syntax for this command: `!whatdropsfrom <monster_name>` or `!wdf <monster_name>`")
 	else:
-		output = ["**{}** drops these items:```".format(monster)]
+		monster = ' '.join(monster)
 
-		for drop in drops:
-			output.append(drop)
+		monster, drops = what_drops_from(monster)
 
-		output.append("```")
-
-		await ctx.channel.send('\n'.join(output))
-
-@bot.command(aliases=["whodrops", "wd"])
-async def get_who_drops(ctx, *item):
-	item = ' '.join(item)
-
-	if item.title() == "Chaos Scroll 60%" or item.title() == "White Scroll":
-		await ctx.channel.send("All monsters from levels 1 through 79 and Nintos drop **{}**.".format(item.title()))
-	else:
-		item, monsters = who_drops(item)
-
-		if not monsters:
-			await ctx.channel.send("**{}** does not exist in the game.".format(item))
+		if not drops:
+			await ctx.channel.send("**{}** does not exist in the game.".format(monster))
 		else:
-			output = ["These monster(s) drop **{}**```".format(item)]
+			output = ["**{}** drops these items:```".format(monster)]
 
-			for monster in monsters:
-				output.append(monster)
+			for drop in drops:
+				output.append(drop)
 
 			output.append("```")
 
 			await ctx.channel.send('\n'.join(output))
 
+@bot.command(aliases=["whodrops", "wd"])
+async def get_who_drops(ctx, *item):
+	if not item:
+		await ctx.channel.send("Please follow the syntax for this command: `!whodrops <item_name>` or `!wd <item_name>`")
+	else:
+		item = ' '.join(item)
+
+		if item.title() == "Chaos Scroll 60%" or item.title() == "White Scroll":
+			await ctx.channel.send("All monsters from levels 1 through 79 and Nintos drop **{}**.".format(item.title()))
+		else:
+			item, monsters = who_drops(item)
+
+			if not monsters:
+				await ctx.channel.send("**{}** does not exist in the game.".format(item))
+			else:
+				output = ["These monster(s) drop **{}**```".format(item)]
+
+				for monster in monsters:
+					output.append(monster)
+
+				output.append("```")
+
+				await ctx.channel.send('\n'.join(output))
+
 @bot.command(aliases=["soulscroll", "ss"])
 async def simulate_ss(ctx, *args):
-	try:
-		amount, stat = int(args[0]), args[1]
+	if not args:
+		await ctx.channel.send("Please follow the syntax for this command: `!soulscroll <amount> <stat>` or `!ss <amount> <stat>`")
+	else:
+		try:
+			amount, stat = int(args[0]), args[1]
 
-		if amount <= 0:
-			await ctx.channel.send("The amount of the stat must be greater than 0.")
-		elif is_number(stat):
+			if amount <= 0:
+				await ctx.channel.send("The amount of the stat must be greater than 0.")
+			elif is_number(stat):
+				await ctx.channel.send("Please follow the syntax for this command: `!soulscroll <amount> <stat>` or `!ss <amount> <stat>`")
+			else:
+				gain, max_gain, avg_gain = simulate_soul_scroll(amount, stat)
+
+				embed = discord.Embed(
+					title="Soul Scroll",
+					color=discord.Color.blurple()
+				)
+
+				embed.set_author(
+					name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+					url=ctx.message.jump_url,
+					icon_url=ctx.author.avatar_url
+				)
+
+				embed.set_thumbnail(url="https://media.discordapp.net/attachments/851690942716313630/860108903841136660/scrollss.png")
+
+				embed.add_field(
+					name="Before",
+					value="**{}** {}".format(str(amount), args[1].upper())
+				)
+
+				embed.add_field(
+					name="After",
+					value="**{}** {}".format(str(amount + gain), args[1].upper())
+				)
+
+				embed.add_field(
+					name="Gain",
+					value="**+{}** {}".format(str(gain), args[1].upper()),
+					inline=False
+				)
+
+				embed.add_field(
+					name="Statistics",
+					value="Max Gain: **+{}**\nAvg Gain: **+{}**".format(str(max_gain), str(avg_gain))
+				)
+
+				await ctx.channel.send(embed=embed)
+
+		except ValueError:
 			await ctx.channel.send("Please follow the syntax for this command: ```!soulscroll <amount> <stat>```")
-		else:
-			gain, max_gain, avg_gain = simulate_soul_scroll(amount, stat)
-
-			embed = discord.Embed(
-				title="Soul Scroll",
-				color=discord.Color.blurple()
-			)
-
-			embed.set_author(
-				name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
-				url=ctx.message.jump_url,
-				icon_url=ctx.author.avatar_url
-			)
-
-			embed.set_thumbnail(url="https://media.discordapp.net/attachments/851690942716313630/860108903841136660/scrollss.png")
-
-			embed.add_field(
-				name="Before",
-				value="**{}** {}".format(str(amount), args[1].upper())
-			)
-
-			embed.add_field(
-				name="After",
-				value="**{}** {}".format(str(amount + gain), args[1].upper())
-			)
-
-			embed.add_field(
-				name="Gain",
-				value="**+{}** {}".format(str(gain), args[1].upper()),
-				inline=False
-			)
-
-			embed.add_field(
-				name="Statistics",
-				value="Max Gain: **+{}**\nAvg Gain: **+{}**".format(str(max_gain), str(avg_gain))
-			)
-
-			await ctx.channel.send(embed=embed)
-
-	except ValueError:
-		await ctx.channel.send("Please follow the syntax for this command: ```!soulscroll <amount> <stat>```")
 
 @bot.command(aliases=["mention", "m"])
 async def mention_people(ctx):
 	message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
 
-	mentioned_people = []
+	if not message.mentions:
+		await ctx.channel.send("The replied message did not mention any people.")
+	else:
+		mentioned_people = []
 
-	for mention in message.mentions:
-		mentioned_people.append("<@{}>".format(mention.id))
+		for mention in message.mentions:
+			mentioned_people.append("<@{}>".format(mention.id))
 
-	await ctx.channel.send(" ".join(mentioned_people))
+		await ctx.channel.send(" ".join(mentioned_people))
 
 @bot.command(name="bbb")
 async def bbb_search(ctx, *args):
 	if not args:
-		await ctx.channel.send("Please provide an input for what to search.")
-
-	search_array = ["https://bbb.hidden-street.net/search_finder/"]
-
-	if len(args) > 1:
-		search_array.append("%20".join(args))
+		await ctx.channel.send("Please follow the syntax for this command: `!bbb <search_query>`")
 	else:
-		search_array.append(args[0])
+		search_array = ["https://bbb.hidden-street.net/search_finder/"]
 
-	await ctx.channel.send("".join(search_array))
+		if len(args) > 1:
+			search_array.append("%20".join(args))
+		else:
+			search_array.append(args[0])
+
+		await ctx.channel.send("".join(search_array))
 
 @bot.command(name="love")
 async def love_at(ctx, *name):
-	full_name = ' '.join(name)
+	if not name:
+		await ctx.channel.send("Please follow the syntax for this command: `!love <name>`")
+	else:
+		full_name = ' '.join(name)
 
-	love_messages = [
-		"i luv u, {}! :heart:".format(full_name), 
-		"{}, will u be my valentine?".format(full_name),
-		"hugs and kisses for {}! :hugging: :kissing:".format(full_name)
-	]
-	rand = random.randint(0, len(love_messages) - 1)
+		love_messages = [
+			"i luv u, {}! :heart:".format(full_name), 
+			"{}, will u be my valentine?".format(full_name),
+			"hugs and kisses for {}! :hugging: :kissing:".format(full_name)
+		]
+		rand = random.randint(0, len(love_messages) - 1)
 
-	love_message = love_messages[rand]
+		love_message = love_messages[rand]
 
-	msg = await ctx.channel.send(love_message)
+		msg = await ctx.channel.send(love_message)
 
-	await msg.add_reaction("🇱")
-	await msg.add_reaction("🇴")
-	await msg.add_reaction("🇻")
-	await msg.add_reaction("🇪")
-	await msg.add_reaction("❤️")
+		await msg.add_reaction("🇱")
+		await msg.add_reaction("🇴")
+		await msg.add_reaction("🇻")
+		await msg.add_reaction("🇪")
+		await msg.add_reaction("❤️")
 
 @bot.command(name="scold")
 async def scold_at(ctx, *name):
-	full_name = ' '.join(name)
-	scold_messages = [
-		":middle_finger: Fuck {}! :middle_finger:".format(full_name),
-		"{}, you're a piece of shit! :poop:".format(full_name),
-		"{} you son of a bitch! :service_dog:".format(full_name)
-	]
+	if not name:
+		await ctx.channel.send("Please follow the syntax for this command: `!scold <name>`")
+	else:
+		full_name = ' '.join(name)
+		scold_messages = [
+			":middle_finger: Fuck {}! :middle_finger:".format(full_name),
+			"{}, you're a piece of shit! :poop:".format(full_name),
+			"{} you son of a bitch! :service_dog:".format(full_name)
+		]
 
-	rand = random.randint(0, len(scold_messages) - 1)
+		rand = random.randint(0, len(scold_messages) - 1)
 
-	scold_message = scold_messages[rand]
+		scold_message = scold_messages[rand]
 
-	msg = await ctx.channel.send(scold_message)
+		msg = await ctx.channel.send(scold_message)
 
-	await msg.add_reaction("🇫")
-	await msg.add_reaction("🇺")
-	await msg.add_reaction("🇨")
-	await msg.add_reaction("🇰")
-	await msg.add_reaction("🖕")
+		await msg.add_reaction("🇫")
+		await msg.add_reaction("🇺")
+		await msg.add_reaction("🇨")
+		await msg.add_reaction("🇰")
+		await msg.add_reaction("🖕")
 
 
 bot.run(TOKEN)
