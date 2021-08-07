@@ -47,7 +47,7 @@ def refresh_rankings_info():
 			char_library[rank_number] = [character]
 
 		if character[2]:
-			guild = character[2].title()
+			guild = character[2]
 			if guild in guild_library:
 				guild_library[guild].append(character[1])
 			else:
@@ -117,16 +117,15 @@ def get_roster(igns):
 '''
 PUBLIC
 params: guild - a string that represents the guild
-returns: guild_info - a tuple which contains an array of the guild members and the count
-					  for guild members
+returns: guild_info - a tuple which contains the true name, an array of the guild members,
+					  and the count for guild members
 '''
 def get_guild_members(guild):
-	if not guild or guild.title() not in guild_library:
-		return []
+	for guild_name, guild_members in guild_library.items():
+		if guild_name.lower() == guild.lower():
+			return (guild_name, guild_members, len(guild_members))
 
-	guild_info = (guild_library[guild.title()], len(guild_library[guild.title()]))
-
-	return guild_info
+	return (None, None, 0)
 
 '''
 PUBLIC

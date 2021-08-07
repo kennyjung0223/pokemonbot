@@ -1,7 +1,6 @@
 '''
 issues:
-	- 1. improve runtime for rising ranks
-	- 2. incorporate embed styling for most messages
+	- 1. handle cases when argument is not even provided at all (see guild command)
 '''
 
 import os
@@ -244,21 +243,24 @@ async def get_rank(ctx, ign):
 			await ctx.channel.send(embed=embed)
 
 @bot.command(aliases=["guild", "g"])
-async def get_guild(ctx, guild):
-	try:
-		guild_members, guild_count = get_guild_members(guild)
+async def get_guild(ctx, guild=None):
+	if not guild:
+		await ctx.channel.send("Please follow the syntax for this command: `!guild <guild_name>` or `!g <guild_name>`")
+	else:
+		try:
+			guild_name, guild_members, guild_count = get_guild_members(guild)
 
-		output = ["**{} Guild Members in {}**\n```".format(guild_count, guild.title())]
+			output = ["**{} Guild Members in {}**\n```".format(guild_count, guild_name)]
 
-		for guild_member in guild_members[:-1]:
-			output.append(guild_member)
-			output.append(" ")
+			for guild_member in guild_members[:-1]:
+				output.append(guild_member)
+				output.append(" ")
 
-		output.append("{}```".format(guild_members[-1]))
+			output.append("{}```".format(guild_members[-1]))
 
-		await ctx.channel.send(''.join(output))
-	except:
-		await ctx.channel.send("{} is an invalid guild.".format(guild.title()))
+			await ctx.channel.send(''.join(output))
+		except:
+			await ctx.channel.send("**{}** is an invalid guild.".format(guild))
 
 @bot.command(aliases=["risinglevel", "rl"])
 async def get_rising_level_stars(ctx):
