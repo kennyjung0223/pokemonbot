@@ -57,7 +57,7 @@ async def get_party(ctx, *igns):
 			value="Please provide at least 1 player in the party."
 		)
 
-		embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+		embed.set_thumbnail(url="https://i.imgur.com/JdVYV8O.png")
 
 		await ctx.channel.send(embed=embed)
 
@@ -79,7 +79,7 @@ async def get_party(ctx, *igns):
 			value="There are more than 12 players listed. Please only provide a maximum of 12 players."
 		)
 
-		embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+		embed.set_thumbnail(url="https://i.imgur.com/JdVYV8O.png")
 
 		await ctx.channel.send(embed=embed)
 
@@ -140,6 +140,12 @@ async def get_party(ctx, *igns):
 
 			await ctx.channel.send(embed=embed)
 		except:
+			missing_player = ""
+
+			for i in range(len(roster)):
+				if not roster[i]:
+					missing_player = igns[i]
+
 			embed = discord.Embed(
 				title="Parties",
 				url="https://storymaple.com/rankings-overall",
@@ -154,10 +160,10 @@ async def get_party(ctx, *igns):
 
 			embed.add_field(
 				name="Invalid Player Input",
-				value="There was an invalid IGN. Please make sure all IGNs are typed correctly."
+				value="Could not retrieve data for **{}**".format(missing_player)
 			)
 
-			embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+			embed.set_thumbnail(url="https://i.imgur.com/JdVYV8O.png")
 
 			await ctx.channel.send(embed=embed)
 
@@ -183,7 +189,7 @@ async def get_rank(ctx, ign=None):
 			value="Invalid IGN. IGNs should have at least 4 characters."
 		)
 
-		embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+		embed.set_thumbnail(url="https://i.imgur.com/JdVYV8O.png")
 
 		await ctx.channel.send(embed=embed)
 	else:
@@ -249,7 +255,7 @@ async def get_rank(ctx, ign=None):
 				icon_url=ctx.author.avatar_url
 			)
 
-			embed.set_thumbnail(url="https://pngimage.net/wp-content/uploads/2018/06/maplestory-mushroom-png-1.png")
+			embed.set_thumbnail(url="https://i.imgur.com/JdVYV8O.png")
 
 			embed.add_field(
 				name="Invalid Player Information",
