@@ -46,8 +46,10 @@ async def get_party(ctx, *igns):
 			color=discord.Color.red()
 		)
 
+		name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 		embed.set_author(
-			name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+			name=name,
 			url=ctx.message.jump_url,
 			icon_url=ctx.author.avatar_url
 		)
@@ -68,8 +70,10 @@ async def get_party(ctx, *igns):
 			color=discord.Color.red()
 		)
 
+		name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 		embed.set_author(
-			name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+			name=name,
 			url=ctx.message.jump_url,
 			icon_url=ctx.author.avatar_url
 		)
@@ -94,8 +98,10 @@ async def get_party(ctx, *igns):
 				color=discord.Color.blue()
 			)
 
+			name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 			embed.set_author(
-				name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+				name=name,
 				url=ctx.message.jump_url,
 				icon_url=ctx.author.avatar_url
 			)
@@ -152,8 +158,11 @@ async def get_party(ctx, *igns):
 				color=discord.Color.red()
 			)
 
+
+			name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 			embed.set_author(
-				name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+				name=name,
 				url=ctx.message.jump_url,
 				icon_url=ctx.author.avatar_url
 			)
@@ -178,8 +187,10 @@ async def get_rank(ctx, ign=None):
 			color=discord.Color.red()
 		)
 
+		name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 		embed.set_author(
-			name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+			name=name,
 			url=ctx.message.jump_url,
 			icon_url=ctx.author.avatar_url
 		)
@@ -212,8 +223,10 @@ async def get_rank(ctx, ign=None):
 				color=discord.Color.green()
 			)
 
+			name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 			embed.set_author(
-				name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+				name=name,
 				url=ctx.message.jump_url,
 				icon_url=ctx.author.avatar_url
 			)
@@ -249,8 +262,10 @@ async def get_rank(ctx, ign=None):
 				color=discord.Color.red()
 			)
 
+			name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 			embed.set_author(
-				name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+				name=name,
 				url=ctx.message.jump_url,
 				icon_url=ctx.author.avatar_url
 			)
@@ -294,8 +309,10 @@ async def get_rising_level_stars(ctx):
 		color=discord.Color.gold()
 	)
 
+	name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 	embed.set_author(
-		name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+		name=name,
 		url=ctx.message.jump_url,
 		icon_url=ctx.author.avatar_url
 	)
@@ -327,8 +344,10 @@ async def get_rising_quest_stars(ctx):
 		color=discord.Color.gold()
 	)
 
+	name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 	embed.set_author(
-		name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+		name=name,
 		url=ctx.message.jump_url,
 		icon_url=ctx.author.avatar_url
 	)
@@ -415,8 +434,10 @@ async def simulate_ss(ctx, *args):
 					color=discord.Color.blurple()
 				)
 
+				name = '{}#{}'.format(ctx.author.name, ctx.author.discriminator) if ctx.author.name == ctx.author.display_name else ctx.author.display_name
+
 				embed.set_author(
-					name='{}#{}'.format(ctx.author.name, ctx.author.discriminator),
+					name=name,
 					url=ctx.message.jump_url,
 					icon_url=ctx.author.avatar_url
 				)
