@@ -104,13 +104,18 @@ def get_links(ign):
 '''
 PUBLIC
 params: igns - an array of strings containing in game names of characters
-returns: roster - an array of strings containing information about those characters
+returns: roster - an array of array of strings containing information about those characters
 '''
 def get_roster(igns):
 	roster = []
 	for ign in igns:
-		character_info = __get_single_char_info(ign)
-		roster.append(character_info)
+		if ign[0] == '[' and not ign[-1] == ']':
+			return []
+		elif ign[0] == '[' and ign[-1] == ']':
+			roster.append([ign])
+		else:
+			character_info = __get_single_char_info(ign)
+			roster.append(character_info)
 
 	return roster
 
@@ -258,6 +263,11 @@ def get_help_messages(command):
 
 			- **1 player:** `!party char`
 			- **Multiple players:** `!p char francis david worrier snowiie jakey cara`
+			- **Reserved:** `!p char [SE] [DK] [Warrior]`
+
+		**Note:** For reserved, you must include square brackets in between what specific
+		class or job you are reserving. Do **NOT** include spaces. For example, use
+		`!p [SE]` instead of `!p [Sharp Eyes]`.
 
 		The first 6 players in <igns> will be formed in party 1, and the
 		last 6 players in <igns> will be formed in party 2. The party command

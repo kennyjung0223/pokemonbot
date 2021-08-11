@@ -89,6 +89,11 @@ async def get_party(ctx, *igns):
 
 	else:
 		roster = get_roster(igns)
+
+		if not roster:
+			await ctx.channel.send("Please do not include spaces inside the brackets for reserved players.\n\nFor example, use **[SE]** instead of **[Sharp Eyes]** or **[DK]** instead of **[Dark Knight]**.")
+			return
+
 		links = [get_links(ign) for ign in igns]
 
 		try:
@@ -111,9 +116,12 @@ async def get_party(ctx, *igns):
 			party_2 = ["```\n"]
 
 			for i in range(min(len(roster), 6)):
-				party_1.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
+				if len(roster[i]) == 1:
+					party_1.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved]", roster[i][0]))
+				else:
+					party_1.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
 					
-				jobs[roster[i][3]] = jobs.get(roster[i][3], 0) + 1
+					jobs[roster[i][3]] = jobs.get(roster[i][3], 0) + 1
 
 			party_1.append("```")
 
@@ -125,9 +133,12 @@ async def get_party(ctx, *igns):
 
 			if len(roster) > 6:
 				for i in range(6, min(len(roster), 12)):
-					party_2.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
+					if len(roster[i]) == 1:
+						party_2.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved]", roster[i][0]))
+					else:
+						party_2.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
 
-					jobs[roster[i][3]] = jobs.get(roster[i][3], 0) + 1
+						jobs[roster[i][3]] = jobs.get(roster[i][3], 0) + 1
 
 				party_2.append("```")
 
