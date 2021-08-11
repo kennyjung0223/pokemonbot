@@ -117,7 +117,7 @@ async def get_party(ctx, *igns):
 
 			for i in range(min(len(roster), 6)):
 				if len(roster[i]) == 1:
-					party_1.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved]", roster[i][0]))
+					party_1.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved for]", roster[i][0]))
 				else:
 					party_1.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
 					
@@ -134,7 +134,7 @@ async def get_party(ctx, *igns):
 			if len(roster) > 6:
 				for i in range(6, min(len(roster), 12)):
 					if len(roster[i]) == 1:
-						party_2.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved]", roster[i][0]))
+						party_2.append("{:<2} {:<25} {}\n".format(i + 1, "[Reserved for]", roster[i][0]))
 					else:
 						party_2.append("{:<2} {:<15} Lvl {:<5} {:<13} [{}]\n".format(i + 1, roster[i][1], roster[i][4], roster[i][3], links[i]))
 
