@@ -2,6 +2,9 @@ import requests
 import json
 import math
 import random
+import pytz
+
+from datetime import datetime
 
 characters = []
 char_library = {}
@@ -226,6 +229,20 @@ def job_count_msg(jobs):
 
 	return job_count_msg
 
+def get_server_time():
+	CST = pytz.timezone('US/Central')
+	server_time = datetime.now(CST)
+
+	hour = server_time.strftime("%H")
+	minute = server_time.strftime("%M")
+	second = server_time.strftime("%S")
+	weekday = server_time.strftime("%A")
+	month = server_time.strftime("%B")
+	day = server_time.strftime("%d")
+	year = server_time.strftime("%Y")
+
+	return "Current server time:\n**{}:{}:{}**\n{}, {} {}, {}".format(hour, minute, second, weekday, month, day, year)
+
 def get_help_messages(command):
 	BOT_CREATOR = "@gamja#9941"
 
@@ -246,6 +263,7 @@ def get_help_messages(command):
 		**bbb:** Fetches a link to the bbb.hidden-street.net database with your searched results
 		**love:** Writes a love message to the inputted name
 		**scold:** Writes a scold message to the inputted name
+		**time:** Outputs the current server time
 		**help:** Sends a direct message (this message)
 
 		For more information on each command, enter this command: `!help <command>`
@@ -409,6 +427,15 @@ def get_help_messages(command):
 		**For example:** `!scold gamja`
 
 		The command will randomly generate a scold message for the specified person.
+		"""
+
+	elif command == "time":
+		return """
+		Information about **time** command:
+
+		**Syntax:** `!time`
+
+		The command will output the current server time (Central Standard Time).
 		"""
 
 	elif command == "help":

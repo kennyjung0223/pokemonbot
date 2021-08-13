@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from discord.channel import DMChannel
 
 from dotenv import load_dotenv
-from parser import refresh_rankings_info, get_all_char_info, get_roster, get_links, get_guild_members, get_rising_level, get_rising_quest, what_drops_from, who_drops, simulate_soul_scroll, is_number, job_count_msg, get_help_messages
+from parser import refresh_rankings_info, get_all_char_info, get_roster, get_links, get_guild_members, get_rising_level, get_rising_quest, what_drops_from, who_drops, simulate_soul_scroll, is_number, job_count_msg, get_help_messages, get_server_time
 
 import random
 import textwrap
@@ -557,6 +557,10 @@ async def scold_at(ctx, *name):
 		await msg.add_reaction("🇰")
 		await msg.add_reaction("🖕")
 
+@bot.command(name="time")
+async def get_time(ctx):
+	time = get_server_time()
+	await ctx.channel.send(time)
 
 bot.run(TOKEN)
 
