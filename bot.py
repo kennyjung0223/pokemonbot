@@ -540,15 +540,20 @@ async def scold_at(ctx, *name):
 	else:
 		full_name = ' '.join(name)
 
-		cannot_scold = {
+		cannot_scold_owner = {
 			"<@!144976210894651392>",
 			"ken",
-			"Ken",
 			"char"
 		}
 
-		if full_name in cannot_scold:
+		cannot_scold_myself = {
+			"<@!853746335538479115>"
+		}
+
+		if full_name.lower() in cannot_scold_owner:
 			msg = await ctx.channel.send("Fu... wait. What? Scold my own creator? Funny. Fuck you, {}!".format(ctx.author.mention))
+		elif full_name.lower() in cannot_scold_myself:
+			msg = await ctx.channel.send("Have you ever scolded yourself? Maybe when you were angry at yourself. But since I am a bot, I feel no emotions. So fuck you, {}!".format(ctx.author.mention))
 		else:
 			scold_messages = [
 				":middle_finger: Fuck {}! :middle_finger:".format(full_name),
