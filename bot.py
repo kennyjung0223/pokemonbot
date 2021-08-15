@@ -539,17 +539,28 @@ async def scold_at(ctx, *name):
 		await ctx.channel.send("Please follow the syntax for this command: `!scold <name>`")
 	else:
 		full_name = ' '.join(name)
-		scold_messages = [
-			":middle_finger: Fuck {}! :middle_finger:".format(full_name),
-			"{}, you're a piece of shit! :poop:".format(full_name),
-			"{} you son of a bitch! :service_dog:".format(full_name)
-		]
 
-		rand = random.randint(0, len(scold_messages) - 1)
+		cannot_scold = {
+			"<@!144976210894651392>",
+			"ken",
+			"Ken",
+			"char"
+		}
 
-		scold_message = scold_messages[rand]
+		if full_name in cannot_scold:
+			msg = await ctx.channel.send("Fu... wait. What? Scold my own creator? Funny. Fuck you, {}!".format(ctx.author.mention))
+		else:
+			scold_messages = [
+				":middle_finger: Fuck {}! :middle_finger:".format(full_name),
+				"{}, you're a piece of shit! :poop:".format(full_name),
+				"{} you son of a bitch! :service_dog:".format(full_name)
+			]
 
-		msg = await ctx.channel.send(scold_message)
+			rand = random.randint(0, len(scold_messages) - 1)
+
+			scold_message = scold_messages[rand]
+
+			msg = await ctx.channel.send(scold_message)
 
 		await msg.add_reaction("🇫")
 		await msg.add_reaction("🇺")
