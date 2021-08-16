@@ -3,8 +3,10 @@ import json
 import math
 import random
 import pytz
+import heapq
 
 from datetime import datetime
+from fuzzywuzzy import fuzz
 
 characters = []
 char_library = {}
@@ -170,11 +172,34 @@ def what_drops_from(monster):
 	return (monster, [])
 
 '''
+PRIVATE
+params: input_item - a string which represents the item to search for
+		items - an array of strings where each string represents all items in the game
+returns: match - a string that best matches the string similarity ratio
+'''
+def __get_similar_string(input_item, items):
+	matches = []
+
+	for item in items:
+		token_ratio = fuzz.token_set_ratio(input_item, item)
+
+		if token_ratio == 100:
+			similarity_ratio = fuzz.ratio(input_item, item)
+			heapq.heappush(matches, (item, similarity_ratio))
+
+	match = heapq.nlargest(1, matches, key=lambda x: x[1])[0][0] if matches else input_item
+
+	return match
+
+'''
 PUBLIC
 params: item - a string which represents an item in the game
 returns: items[item] - an array of monsters who drop the item
 '''
 def who_drops(item):
+	if item not in items.keys():
+		item = __get_similar_string(item, items.keys())
+
 	for key, value in items.items():
 		if item.title() == key.title():
 			return (key, value)

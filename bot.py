@@ -367,9 +367,9 @@ async def get_rising_quest_stars(ctx):
 
 	for rq_star in rq_stars:
 		if rq_star[2]:
-			rising_stars.append("{:<2} {:<15} Quests {:<5} {:<13}\n".format(rq_star[0], rq_star[1], rq_star[5], rq_star[2]))
+			rising_stars.append("{:<2} {:<15} Quests: {:<5} {:<13}\n".format(rq_star[0], rq_star[1], rq_star[5], rq_star[2]))
 		else:
-			rising_stars.append("{:<2} {:<15} Quests {:<5}\n".format(rq_star[0], rq_star[1], rq_star[5]))
+			rising_stars.append("{:<2} {:<15} Quests: {:<5}\n".format(rq_star[0], rq_star[1], rq_star[5]))
 
 	rising_stars.append("```")
 
