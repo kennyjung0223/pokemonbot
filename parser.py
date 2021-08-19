@@ -4,6 +4,7 @@ import math
 import random
 import pytz
 import heapq
+import numpy as np
 
 from datetime import datetime
 from fuzzywuzzy import fuzz
@@ -207,22 +208,45 @@ def who_drops(item):
 	return (item, [])
 
 '''
+PRIVATE
+params: max_gain - max gain of the soul scroll
+		pool_count - pool_count which I don't really know what it does
+returns: probabilities - an array of the probability to get each roll from +1 to +max gain
+'''
+def __get_probabilities(max_gain, pool_count):
+	probabilities = []
+
+	probabilities.append((7 - (1/8)) / (pool_count - 2))
+
+	for i in range(2, max_gain):
+		probabilities.append(((4 * i) + 2) / (pool_count - 2))
+
+	probabilities.append(1 - (2 * math.pow(max_gain, 2) - 9/8) / (pool_count - 2))
+
+	return probabilities
+
+'''
 PUBLIC
 params: amount - an int which represents that amount of the stat
 		stat - a string which represents whether the stat is wa/ma or not
-returns: (gain, max_gain, average_gain) - a tuple of the gain, max possible gain, and average gain
+returns: (gain, max_gain, expected_gain, equal_or_better) - a tuple of the gain, max possible gain, expected gain, and cumulative probability for better or equal stats
 '''
-def simulate_soul_scroll(amount, stat):	
-	modifier = 16 if stat.lower() == "wa" or stat.lower() == "ma" else 4
+def simulate_soul_scroll(amount, stat):
+	modifier = 16 if stat == "wa" or stat == "ma" else 4
 
 	limit = 1 + (amount / modifier)
-	pool_count = math.floor((limit * (limit + 1) / 2) + limit)
-	gain = max(1, 1 + math.floor(-1 + math.sqrt((8 * random.randint(1, max(1, pool_count - 1))) + 1) / 4))
+	pool_count = (limit * (limit + 1) / 2) + limit
+	
+	if pool_count <= 71/8:
+		return (1, 1, 1, 100)
+	
+	gain = max(1, math.floor(math.sqrt(8 * np.random.uniform(1, pool_count - 1) + 1)/4))
+	max_gain = math.ceil(math.sqrt(8 * pool_count - 7)/4 - 1)
+	expected_gain = max_gain + (7/8 + 19/24 * max_gain - math.pow(max_gain, 2) - 2/3 * math.pow(max_gain, 3)) / (pool_count - 2)
 
-	max_gain = max(1, 1 + math.floor(-1 + math.sqrt((8 * max(1, pool_count - 1)) + 1) / 4))
-	avg_gain = max(1, 1 + math.floor(-1 + math.sqrt((8 * (1 + max(1, pool_count - 1)) / 2) + 1) / 4))
+	probabilities = __get_probabilities(max_gain, pool_count)
 
-	return (gain, max_gain, avg_gain)
+	return (gain, max_gain, round(expected_gain, 2), round(sum(probabilities[gain - 1:]) * 100, 2))
 
 '''
 PUBLIC

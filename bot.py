@@ -431,14 +431,17 @@ async def simulate_ss(ctx, *args):
 		await ctx.channel.send("Please follow the syntax for this command: `!soulscroll <amount> <stat>` or `!ss <amount> <stat>`")
 	else:
 		try:
-			amount, stat = int(args[0]), args[1]
+			amount, stat = int(args[0]), args[1].lower()
+			available_stats = {"str", "dex", "int", "luk", "wa", "ma"}
 
 			if amount <= 0:
 				await ctx.channel.send("The amount of the stat must be greater than 0.")
 			elif is_number(stat):
 				await ctx.channel.send("Please follow the syntax for this command: `!soulscroll <amount> <stat>` or `!ss <amount> <stat>`")
+			elif stat not in available_stats:
+				await ctx.channel.send("Currently this bot only accepts stats for the following: **str**, **dex**, **int**, **luk**, **wa**, and **ma**.\nPlease use one of these stats as an input.")
 			else:
-				gain, max_gain, avg_gain = simulate_soul_scroll(amount, stat)
+				gain, max_gain, expected_gain, better_or_equal = simulate_soul_scroll(amount, stat)
 
 				embed = discord.Embed(
 					title="Soul Scroll",
@@ -473,7 +476,12 @@ async def simulate_ss(ctx, *args):
 
 				embed.add_field(
 					name="Statistics",
-					value="Max Gain: **+{}**\nAvg Gain: **+{}**".format(str(max_gain), str(avg_gain))
+					value="Max Gain: **+{}**\nExpected Gain: **+{}**\nOdds for same or better: **{}%**".format(str(max_gain), str(expected_gain), str(better_or_equal))
+				)
+
+				embed.set_footer(
+					text="Credits to Tool (Jef#6196) for his calculator.",
+					icon_url="http://bit.ly/3yhBgrx"
 				)
 
 				await ctx.channel.send(embed=embed)
